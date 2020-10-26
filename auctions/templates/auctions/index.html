@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings </h2>
+
+    <div class="card-group">
+    
+    {% for listing in Listings %}
+    <div class="card">
+        <img src="{{listing.image.url}}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{listing.title}}</h5>
+          <p class="card-text">{{listing.description}}</p>
+          <p class="card-text">Current Price:-${{listing.currentBid}}</p>
+          <p class="card-text">Starting Price:-${{listing.startingBid}}</p>
+          {% if user.is_authenticated %}
+
+          <a href="{% url 'makeBid' listing.id %}" class="btn btn-primary">View</a>
+          {% endif %}
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">{{listing.product_date}}</small>
+        </div>
+      </div>
+   
+    {% endfor %}
+
+</div>
+
+{% endblock %}

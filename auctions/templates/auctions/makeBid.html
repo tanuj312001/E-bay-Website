@@ -1,0 +1,89 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+<h1> Wanna buy this?</h1>
+
+{% if listing.flActive %}
+{% ifequal listing.user request.user %}
+<a href="{% url 'closeListing' listing.id %}" class="btn btn-info" role="button">Close Auction</a>
+{% endifequal %}
+{% endif %}
+
+
+{% if listing.flActive is False %}
+{% ifequal listing.user request.user %}
+You have sold this item to {{listing.all_bids.last.user}}
+{% endifequal %}
+{% endif %}
+
+{% if listing.flActive is False %}
+{% ifnotequal listing.user request.user %}
+Congrats {{listing.all_bids.last.user}} , the auction winner!!!
+{% endifnotequal %}
+{% endif %}
+<div class="card">
+  
+
+
+    <img src="{{listing.image.url}}" class="card-img-top" alt="...">
+    <div class="card-body">
+      <h5 class="card-title">{{listing.title}}</h5>
+      <p class="card-text">{{listing.description}}</p>
+      <p class="card-text">Current Price:-${{listing.currentBid}}</p>
+      <p class="card-text">Starting Price:-${{listing.startingBid}}</p>
+      <div class="card-footer">
+        <small class="text-muted">{{listing.product_date}}</small>
+      </div>
+    </div>
+</div>
+
+
+
+{% if listing.flActive %}
+{% ifnotequal listing.user request.user %}
+<div class="form-group">
+  <form action="{% url 'makeBid' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="bid !!!!">
+    
+      
+  </form>
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li  {% if message.tags %} class=" {{ message.tags }} " {% endif %}> {{ message }} </li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endifnotequal %}
+  {% endif %}
+  
+
+{% if listing.flActive %}
+<div class="form-group">
+  <form action="{% url 'comment' listing.id %}" method="POST">
+    {% csrf_token %}
+    {{commentForm}}
+    
+    <input type=submit value='Post' >
+  </form>
+  </div>
+  {% endif %}
+{% for comment in Comments %}
+<div class="card w-50">
+  <div class="card-body">
+    <h5 class="card-title">{{request.user}}</h5>
+    <p class="card-text">{{comment.comment}}</p>
+  </div>
+</div>
+
+{% endfor %}
+
+
+{% endblock %}
+
+</div>
+
+
